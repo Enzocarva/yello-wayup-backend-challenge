@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewpoint" content="initial-scale=1, width=device-width">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>URL Shortener by Enzo Carvalho</title>
+
+</head>
+
+<body style="background-color: beige;">
+    <div style="text-align: center;">
+        <h1>URL Shortener by Enzo Caravlho</h1>
+        <input type="text" id="url_input" placeholder="Enter URL" style="width: 400px;">
+        <br><br>
+        <button onclick="encode()" style="background-color: antiquewhite;">Encode</button>
+        <button onclick="decode()" style="background-color: rgb(202, 173, 133);">Decode</button>
+        <br><br>
+        <div style="text-align: center;">
+            <p id="output"> </p>
+        </div>
+    </div>
+
+    <script>
+        function encode() {
+            let long_url_var = document.getElementById("url_input").value;
+            fetch("/encode", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    long_url: long_url_var
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("output").innerHTML = 'Short URL = ' + data.short_url;
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+
+        function decode() {
+            let short_url_var = document.getElementById("url_input").value;
+            fetch("/decode", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    short_url: short_url_var
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("output").innerHTML = 'Long URL = ' + data.long_url;
+                    // document.getElementByid("output").innerHTML = 'Long URL = ';
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                });
+        }
+    </script>
+</body>
+
+</html>
